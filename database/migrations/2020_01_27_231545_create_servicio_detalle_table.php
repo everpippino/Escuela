@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateMatriculaTable extends Migration
+class CreateServicioDetalleTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,15 @@ class CreateMatriculaTable extends Migration
      */
     public function up()
     {
-        Schema::create('matricula', function (Blueprint $table) {
+        Schema::create('servicio_detalle', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('matricula_id');
+            $table->integer('servicio_id');
             $table->date('fecha_alta');
-            $table->integer('numero');
-            $table->integer('division_id');
-            $table->integer('cuota_id');
-            $table->integer('persona_id');
+            $table->date('fecha_baja');
+            $table->date('fecha_vto');
+            $table->float('monto_pagado');
+            $table->float('precio_actual');
             $table->timestamps();
         });
     }
@@ -31,6 +33,6 @@ class CreateMatriculaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('matricula');
+        Schema::dropIfExists('servicio_detalle');
     }
 }
