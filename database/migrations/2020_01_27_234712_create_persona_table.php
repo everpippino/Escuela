@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCuotaTable extends Migration
+class CreatePersonaTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,14 @@ class CreateCuotaTable extends Migration
      */
     public function up()
     {
-        Schema::create('cuota', function (Blueprint $table) {
+        Schema::create('persona', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('matricula_id');
-            $table->integer('anio');
-            $table->string('estado');
-            $table->date('fecha_vto');
-            $table->integer('mes');
-            $table->float('monto');
-            $table->float('monto_pagado');
+            $table->string('apellido');
+            $table->integer('dni');
+            $table->string('email');
+            $table->date('fecha_nacimiento');
+            $table->string('nombre');
+            $table->integer('telefono');
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ class CreateCuotaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cuota');
+        Schema::dropIfExists('persona');
     }
 }
