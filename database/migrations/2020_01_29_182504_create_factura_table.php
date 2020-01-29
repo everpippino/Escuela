@@ -15,6 +15,7 @@ class CreateFacturaTable extends Migration
     {
         Schema::create('factura', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('pago_id');
             $table->integer('codigo');
             $table->date('fecha');
             $table->float('monto');
