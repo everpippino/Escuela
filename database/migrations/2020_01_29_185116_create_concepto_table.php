@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFacturaDetalleTable extends Migration
+class CreateConceptoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateFacturaDetalleTable extends Migration
      */
     public function up()
     {
-        Schema::create('factura_detalle', function (Blueprint $table) {
+        Schema::create('concepto', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('concepto_id');
-            $table->integer('factura_id');
+            $table->string('nombre');
             $table->float('precio');
             $table->timestamps();
         });
@@ -29,6 +28,6 @@ class CreateFacturaDetalleTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('factura_detalle');
+        Schema::dropIfExists('concepto');
     }
 }
