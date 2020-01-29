@@ -13,7 +13,7 @@ class Servicio_detalle extends Model
     'fecha_baja',
     'fecha_vto',
     'monto_pagado',
-    'precio_actual',
+    'precio_actual'
   ];
 
   public function matricula(){

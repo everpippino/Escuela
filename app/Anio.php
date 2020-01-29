@@ -10,7 +10,7 @@ class Anio extends Model
 
   protected $fillable = [
     'anio',
-    'importe_basico',
+    'importe_basico'
   ];
 
   public function division(){

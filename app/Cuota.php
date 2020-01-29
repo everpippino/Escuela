@@ -14,7 +14,7 @@ class Cuota extends Model
     'fecha_vto',
     'mes',
     'monto',
-    'monto_pagado',
+    'monto_pagado'
   ];
 
   public function matricula(){

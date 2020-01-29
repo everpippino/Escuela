@@ -14,7 +14,7 @@ class Persona extends Model
     'email',
     'fecha_nacimiento',
     'nombre',
-    'telefono',
+    'telefono'
   ];
 
   public function pago(){
@@ -28,6 +28,10 @@ class Persona extends Model
   public function factura(){
     //Relacion de una persona a una factura 
           return $this->hasOne('App\Factura');
+  }
+  public function matricula(){
+    //Relacion de una persona a una matricula 
+          return $this->hasOne('App\Matricula');
   }
   public function vinculo(){
     //Relacion de una persona a muchos vinculos

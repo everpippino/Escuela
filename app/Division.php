@@ -10,7 +10,7 @@ class Division extends Model
 
   protected $fillable = [
     'aula',
-    'nombre',
+    'nombre'
   ];
 
   public function anio(){

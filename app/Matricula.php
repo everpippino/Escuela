@@ -10,7 +10,7 @@ class Matricula extends Model
 
   protected $fillable = [
     'fecha_alta',
-    'numero',
+    'numero'
   ];
 
   public function division(){
