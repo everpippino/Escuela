@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreatePagoTable extends Migration
+class CreateTipoPagoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreatePagoTable extends Migration
      */
     public function up()
     {
-        Schema::create('pago', function (Blueprint $table) {
+        Schema::create('tipo_pago', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('persona_id');
-            $table->integer('tipo_pago_id');
-            $table->date('fecha');
-            $table->float('monto');
+            $table->string('nombre');
+            $table->string('cbu')->nullable();
+            $table->string('codigo')->nullable();
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ class CreatePagoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('pago');
+        Schema::dropIfExists('tipo_pago');
     }
 }

@@ -22,8 +22,11 @@ class Pago extends Model
           return $this->hasOne('App\Persona');
   }
   public function factura(){
-    //Relacion de una persona a una factura 
+    //Relacion de un pago a una factura 
           return $this->hasOne('App\Factura');
   }
-   
+  public function tipo_pago(){
+    //Relacion de una pago a un tipo_pago 
+          return $this->hasOne('App\Tipo_pago');
+  }
 }
