@@ -4,12 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Cuota_pago extends Model
+class CuotaPago extends Model
 {
   protected $table = "cuota_pago";
 
   protected $fillable = [
-    'precio'
+    'monto_pagado'
   ];
 
   public function pago(){

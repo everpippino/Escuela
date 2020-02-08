@@ -13,10 +13,6 @@ class Pago extends Model
     'monto'    
   ];
 
-  public function caja(){
-    //Relacion de un pago a una caja 
-          return $this->hasOne('App\Pago');
-  }
   public function persona(){
     //Relacion de un pago a una persona 
           return $this->hasOne('App\Persona');

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCajaTable extends Migration
+class CreateServicioDetallePagoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateCajaTable extends Migration
      */
     public function up()
     {
-        Schema::create('caja', function (Blueprint $table) {
+        Schema::create('servicio_detalle_pago', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('numero');
+            $table->integer('pago_id');
+            $table->integer('servicio_detalle_id');
+            $table->float('monto_pagado');
             $table->timestamps();
         });
     }
@@ -27,6 +29,6 @@ class CreateCajaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('caja');
+        Schema::dropIfExists('servicio_detalle_pago');
     }
 }
