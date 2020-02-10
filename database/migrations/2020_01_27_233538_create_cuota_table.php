@@ -17,7 +17,7 @@ class CreateCuotaTable extends Migration
             $table->increments('id');
             $table->integer('matricula_id');
             $table->integer('anio');
-            $table->string('estado');
+            $table->enum('estado',['pagada','vigente','vencida']);
             $table->date('fecha_vto');
             $table->integer('mes');
             $table->float('monto');
