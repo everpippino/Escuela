@@ -34,7 +34,7 @@ class MatriculaController extends Controller
       public function store($id_matricula = null){
         $this->validate(request(), [
           'fecha_alta' => ['required'],
-          'numero' => ['required'],
+          'numero' => ['required']
         ]);
         $datos = request()->all();
         App\Matricula::updateOrCreate(['id' => $id_matricula], $datos);

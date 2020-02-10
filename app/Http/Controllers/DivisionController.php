@@ -34,7 +34,7 @@ class DivisionController extends Controller
       public function store($id_division = null){
         $this->validate(request(), [
           'aula' => ['required'],
-          'nombre' => ['required'],
+          'nombre' => ['required']
         ]);
         $datos = request()->all();
         App\Division::updateOrCreate(['id' => $id_division], $datos);

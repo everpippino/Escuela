@@ -34,7 +34,7 @@ class AnioController extends Controller
       public function store($id_anio = null){
         $this->validate(request(), [
           'anio' => ['required'],
-          'importe_basico' => ['required'],
+          'importe_basico' => ['required']
         ]);
         $datos = request()->all();
         App\Anio::updateOrCreate(['id' => $id_anio], $datos);
