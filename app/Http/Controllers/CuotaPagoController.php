@@ -4,40 +4,39 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class UserController extends Controller
+class CuotaPagoController extends Controller
 {
-    // Retorna la vista del panel de administracion de usuarios
+    // Retorna la vista del panel de administracion de cuotaPagos
     public function index(){
-        $usuarios = App\User::paginate();
-        return view('usuario/list', compact('usuarios'));
+        $cuotaPagos = App\CuotaPago::paginate();
+        return view('cuotaPago/list', compact('cuotaPagos'));
       }
   
-      //  Retorna la vista para añadir un usuario a la base de datos
+      //  Retorna la vista para añadir una cuotaPago a la base de datos
       public function create(){
-        $usuarios = App\User::all();
-        return view('usuario/create', compact('usuarios'));
+        $cuotaPagos = App\CuotaPago::all();
+        return view('cuotaPago/create', compact('cuotaPagos'));
       }
   
-      //  Retorna la vista para actualizar los datos de un perfil de la base de datos
-      public function edit($id_usuario){
-        $usuario = App\User::find($id_usuario);
-        return view('usuario/edit', compact('usuario'));
+      //  Retorna la vista para actualizar los datos de una cuotaPago de la base de datos
+      public function edit($id_cuota_pago){
+        $cuotaPago = App\CuotaPago::find($id_cuota_pago);
+        return view('cuotaPago/edit', compact('cuotaPago'));
       }
   
-      //  Borra un perfil de la base de datos
-      public function delete($id_usuario){
-        App\User::destroy($id_usuario);
-        return redirect()->to('usuario');
+      //  Borra una cuotaPago de la base de datos
+      public function delete($id_cuota_pago){
+        App\CuotaPago::destroy($id_cuota_pago);
+        return redirect()->to('cuotaPago');
       }
   
-      //  Añade y actualiza los perfiles en la base de datos
-      public function store($id_usuario = null){
+      //  Añade y actualiza las cuotaPagos en la base de datos
+      public function store($id_cuota_pago = null){
         $this->validate(request(), [
-          'nombre' => ['required'],
-          'email' => ['required'],
+          'monto_pagado' => ['required']
         ]);
         $datos = request()->all();
-        App\User::updateOrCreate(['id' => $id_usuario], $datos);
-        return redirect()->to('usuario');
+        App\CuotaPago::updateOrCreate(['id' => $id_cuota_pago], $datos);
+        return redirect()->to('cuotaPago');
       }
 }
