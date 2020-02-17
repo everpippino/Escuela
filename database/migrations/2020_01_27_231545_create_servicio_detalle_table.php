@@ -20,7 +20,7 @@ class CreateServicioDetalleTable extends Migration
             $table->date('fecha_alta');
             $table->date('fecha_baja');
             $table->date('fecha_vto');
-            $table->float('monto_pagado');
+            $table->enum('estado',['pagada','vigente','vencida']);
             $table->float('precio_actual');
             $table->timestamps();
         });

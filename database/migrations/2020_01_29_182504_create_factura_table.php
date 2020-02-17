@@ -13,7 +13,7 @@ class CreateFacturaTable extends Migration
      */
     public function up()
     {
-        Schema::create('factura', function (Blueprint $table) {
+        Schema::create('commercial_invoices', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('pago_id');
             $table->integer('codigo');
@@ -31,6 +31,6 @@ class CreateFacturaTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('factura');
+        Schema::dropIfExists('commercial_invoices');
     }
 }
