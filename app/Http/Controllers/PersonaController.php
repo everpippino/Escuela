@@ -43,4 +43,9 @@ class PersonaController extends Controller
         App\Persona::updateOrCreate(['id' => $id_persona], $datos);
         return redirect()->to('usuario');
       }
+      //  Busca y retorna una persona por dni
+      public function dni($dni){
+        $persona = App\Persona::find($dni);
+        return view('persona/dni', compact('persona'));
+      }
 }
