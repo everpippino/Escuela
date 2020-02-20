@@ -1,15 +1,19 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use App\Persona;
 
 class PersonaController extends Controller
 {
     // Retorna la vista del panel de administracion de personas
     public function index(){
         $personas = App\Persona::paginate();
-        return view('persona/list', compact('personas'));
+        //dd($personas);
+        return view('persona.index', compact('personas'));
+        
+      
       }
   
       //  Retorna la vista para añadir una persona a la base de datos
@@ -41,11 +45,21 @@ class PersonaController extends Controller
         ]);
         $datos = request()->all();
         App\Persona::updateOrCreate(['id' => $id_persona], $datos);
-        return redirect()->to('usuario');
+        return redirect()->to('persona');
       }
       //  Busca y retorna una persona por dni
-      public function dni($dni){
-        $persona = App\Persona::find($dni);
-        return view('persona/dni', compact('persona'));
+      public function dni (Request $request){
+        $query = $request->input('query');
+        $personas = Persona::where('dni','like', "%$query%")->get();
+       
+        return view('persona/index')-> with(compact('personas'));
+      }
+
+      //  Busca y retorna la deuda de la persona seleccionada
+      public function deuda (Request $request){
+        //$query = $request->input('query');
+        $cuotas = Cuota::where('estado','!=', "pagada")->get();
+        $servicios = ServicioDetalle::where('estado','!=', 'pagada')->get();
+        return view('persona/deuda')-> with(compact('cuotas'));
       }
 }

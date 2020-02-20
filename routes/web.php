@@ -18,3 +18,10 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/persona', function(){
+    return view('persona.index');
+});
+Route::get('/dni', 'PersonaController@dni');
+Route::get('/dueda', 'PersonaController@deuda');
+
+

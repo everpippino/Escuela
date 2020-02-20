@@ -17,8 +17,7 @@ class CreateMatriculaTable extends Migration
             $table->increments('id');
             $table->date('fecha_alta');
             $table->integer('numero');
-            $table->integer('division_id');
-            $table->integer('cuota_id');
+            $table->integer('division_id');          
             $table->integer('persona_id');
             $table->timestamps();
         });
