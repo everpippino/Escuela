@@ -22,6 +22,6 @@ Route::get('/persona', function(){
     return view('persona.index');
 });
 Route::get('/dni', 'PersonaController@dni');
-Route::get('/dueda', 'PersonaController@deuda');
+Route::get('/deuda/{id}', 'PersonaController@deuda');
 
 

@@ -56,10 +56,28 @@ class PersonaController extends Controller
       }
 
       //  Busca y retorna la deuda de la persona seleccionada
-      public function deuda (Request $request){
-        //$query = $request->input('query');
-        $cuotas = Cuota::where('estado','!=', "pagada")->get();
-        $servicios = ServicioDetalle::where('estado','!=', 'pagada')->get();
-        return view('persona/deuda')-> with(compact('cuotas'));
+      public function deuda ($id){
+        $persona = Persona::where('id','=', "$id")->first();
+        $matricula = $persona->matricula()->first();
+        $cuotas = $matricula->cuota()->where('estado','!=', "pagada")->get();
+        $servicios = $matricula->servicio_detalle()->where('estado','!=', "pagada")->get();
+        $adeudado = DB::select('select a.tipo, a.concepto, a.periodo, a.monto
+        from
+        (select 0 as tipo,\'cuota\' as concepto, c.mes as periodo, c.monto as monto
+        from persona p inner join matricula m on p.id=m.persona_id
+             inner join cuota c on m.id=c.matricula_id
+        where c.estado != \'pagada\' and m.persona_id = :id1
+        union
+        select 1 as tipo, s.nombre as concepto, month(sd.fecha_vto) as periodo, sd.precio_actual as monto
+        from persona p inner join matricula m on p.id = m.persona_id
+             inner join servicio_detalle sd on m.id = sd.matricula_id
+             inner join servicio s on s.id = sd.servicio_id
+        where sd.estado != \'pagada\' and m.persona_id = :id2) as a
+        order by periodo , tipo' , [ "id1" => $id, "id2" => $id]);
+        
+        return view('persona/deuda')-> with(compact('adeudado'));
       }
 }
+
+//Cuota::where('estado','!=', "pagada")->get();
+//ServicioDetalle::where('estado','!=', 'pagada')->get();

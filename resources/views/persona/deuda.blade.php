@@ -16,10 +16,19 @@
                                 <tr>                            
                                     <th scope="col">CONCEPTO</th>
                                     <th scope="col">PERIODO</th>
+                                    <th scope="col">MONTO</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                 
+                                    @foreach($adeudado as $ad) 
+                                    <tr>
+                                        <th scope="row">{{$ad->concepto}}</th>
+                                        <th scope="row">{{$ad->periodo}}</th>
+                                        <th scope="row">{{$ad->monto}}</th>
+                                        <th scope="row"><input type = "checkbox" name = "optionsCheckboxes" deshabilitado marcado></th>
+                                    </tr>
+                                    @endforeach
+    
                                 </tbody>
                             </table>
                     

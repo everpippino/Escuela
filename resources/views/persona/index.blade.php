@@ -31,17 +31,15 @@
                               <th scope="row">{{$persona->fecha_nacimiento}}</th>
                               <th scope="row">{{$persona->telefono}}</th>
                               <th scope="row">{{$persona->email}}</th>                           
-                              <th><input type = "checkbox" name = "optionsCheckboxes"></th>
+                              <th scope="row"><a href="{{ url('/deuda/'.$persona->id)}}">Ver deuda</a></th>                           
+                              
                           </tr>
-                          @endforeach 
+                          @endforeach
                         </tbody>
                       </table>
                       
                 </div>
-                <form class="form-inline"  method="get" action="{{ url('/deuda') }}">
-                    <button class = "btn btn-primary" type="submit"> Ver deuda </button>
-                    <button class = "btn btn-primary"> Atras </button>
-                </form>
+                
             </div>
             
         </div>
