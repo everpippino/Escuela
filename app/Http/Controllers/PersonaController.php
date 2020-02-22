@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Persona;
+use App\CuotaPago;
+use App\ServicioDetallePago;
+use App\Pago;
 
 class PersonaController extends Controller
 {
@@ -11,7 +14,7 @@ class PersonaController extends Controller
     public function index(){
         $personas = App\Persona::paginate();
         //dd($personas);
-        return view('persona.index', compact('personas'));
+        return view('admin/persona/index', compact('personas'));
         
       
       }
@@ -19,18 +22,18 @@ class PersonaController extends Controller
       //  Retorna la vista para añadir una persona a la base de datos
       public function create(){
         $personas = App\Persona::all();
-        return view('persona/create', compact('personas'));
+        return view('admin/persona/create', compact('personas'));
       }
   
       //  Retorna la vista para actualizar los datos de una persona de la base de datos
       public function edit($id_persona){
         $persona = App\Persona::find($id_persona);
-        return view('persona/edit', compact('persona'));
+        return view('admin/persona/edit', compact('persona'));
       }
   
       //  Borra una persona de la base de datos
       public function delete($id_persona){
-        App\Persona::destroy($id_persona);
+        App\Persona::destroy($id_persona);//al reves? aca delete? arriba destroy?
         return redirect()->to('persona');
       }
   
@@ -52,7 +55,7 @@ class PersonaController extends Controller
         $query = $request->input('query');
         $personas = Persona::where('dni','like', "%$query%")->get();
        
-        return view('persona/index')-> with(compact('personas'));
+        return view('admin/persona/index')-> with(compact('personas'));
       }
 
       //  Busca y retorna la deuda de la persona seleccionada
@@ -72,11 +75,19 @@ class PersonaController extends Controller
         where sd.estado != \'pagada\' and m.persona_id = :id2) as a
         order by periodo , tipo' , [ "id1" => $id, "id2" => $id]);
         
-        return view('persona/deuda')-> with(compact('persona','adeudado'));
+        return view('admin/persona/deuda')-> with(compact('persona','adeudado'));
       }
 
       //  Paga segun el monto ingresado, para el alumno indicado, la deuda mas atrasada
       public function pagar(Request $request){
+        //validar
+        $validatedData = $request->validate([
+          'monto' => 'required|numeric|min:0'
+          
+      ]);
+        
+       
+
         $id=$request->idPersona;
         $persona = Persona::where('id','=', $id)->first();
         $monto = $request->monto;
@@ -127,18 +138,41 @@ class PersonaController extends Controller
           $i++;
         }
         
-        return view('persona/pagar')-> with(compact('persona','aPagar','monto'));
+        return view('admin/persona/pagar')-> with(compact('persona','aPagar','monto'));
       }
       
       //  Paga segun el monto ingresado, para el alumno indicado, la deuda mas atrasada
       public function guardar(Request $request){
-        dd($request);
+        dd($request->all());
+
         $cantConceptos = count($request->tipoPago);
         // registro el pago
+        $pago = new Pago();
+        $pago->persona_id = $request->idPersona;
+        $pago->tipo_pago_id = $montoPago;//se supone que es la forma de pago?
+        $pago->fecha = $montoPago;//necesito la fecha de hoy
+        $pago->monto = $montoPago;//necesito el total de montoPago 
+        $pago->save();//o store?
+
         for($i = 0; $i < $cantConceptos; $i++) {
           $tipo = $request->tipoPago[$i];
           $idPago = $request->idPago[$i];
           $montoPago = $request->montoPago[$i];
+
+           // registro el pago de cuotas
+         
+          if ($tipo=0){
+            $cuotaPago = new CuotaPago();
+            $cuotaPago->monto_pagado = $montoPago;
+            $cuotaPago->save();//o store?
+             // registro el pago de servicios
+          } else {
+            $servicioDetallePago = new ServicioDetallePago();
+            $servicioDetallePago->monto_pagado = $montoPago;
+            $servicioDetallePago->save();//o store?
+          }
+          $cuotaPago->save();
+          return redirect('admin/persona/deuda'.$request->idPersona);
         }
       }
 }

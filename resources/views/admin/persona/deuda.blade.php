@@ -37,7 +37,7 @@
                             </div>
                         </div>
 
-                        <form class="form"  method="POST" action="{{ url('/pagar') }}">
+                        <form class="form"  method="POST" action="{{ url('/admin/persona/pagar') }}">
                             @csrf
 
                             <input type="hidden" id="idPersona" name="idPersona" value="{{$persona->id}}"/>
@@ -46,16 +46,15 @@
                                 <div class="col-sm-6">
                                     <div class = "form-group">
                                         <span>Monto:</span>
-                                        <input type="text" id="monto" name="monto" placeholder = "Ingrese el monto que desea abonar" class="form-control" />
+                                        <input type="number" step="0.01" id="monto" name="monto" placeholder = "Ingrese el monto que desea abonar" class="form-control" />
                                     </div>
                                 </div>
                             </div>
                             
                             <div class="row">
                                 <div class="col-sm-6">                            
-                                    <button class = "btn btn-primary ">
-                                        <i class = "material-icons" type="submit"> done </i> Pagar
-                                    </button> 
+                                    <button class = "btn btn-primary " type="submit">Aplicar</button> 
+                                    <a href="{{ url('/admin/persona/home/')}}" rel="tooltip"  class="btn btn-primary ">Cancelar</a>
                                 </div>
                             </div>                                                                                         
                         </form>

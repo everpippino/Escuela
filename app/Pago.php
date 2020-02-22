@@ -10,7 +10,10 @@ class Pago extends Model
 
   protected $fillable = [
     'fecha',
-    'monto'    
+    'monto',
+    'tipo_pago',
+    'transferencia',
+    'codigo'  
   ];
 
   public function persona(){

@@ -17,13 +17,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('/persona', function(){
-    return view('persona.index');
+Route::get('/admin/persona/home', 'HomeController@index')->name('home');
+Route::get('persona', function(){
+    return view('admin/persona/index');
 });
-Route::get('/dni', 'PersonaController@dni');
-Route::get('/deuda/{id}', 'PersonaController@deuda');
-Route::post('/pagar', 'PersonaController@pagar');
-Route::post('/guardar', 'PersonaController@guardar');
+Route::get('/admin/persona/dni', 'PersonaController@dni');
+Route::get('/admin/persona/deuda/{id}', 'PersonaController@deuda');
+Route::post('/admin/persona/pagar', 'PersonaController@pagar');
+Route::post('/admin/persona/guardar', 'PersonaController@guardar');
 
 

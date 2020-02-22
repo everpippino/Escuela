@@ -39,7 +39,7 @@
 
                                                     <input type="hidden" name="tipoPago[]" value="{{$ap->tipo}}" />
                                                     <input type="hidden" name="idPago[]" value="{{$ap->id}}" />
-                                                    <input type="hidden" name="montoPago[]" value="{{$ap->aPagar}}" required/>
+                                                    <input type="hidden" name="montoPago[]" value="{{$ap->aPagar}}" />
                                                 </td>
                                             </tr>
                                             @endforeach
@@ -62,16 +62,14 @@
                                             <option value="deposito">Deposito bancario</option>
                                             <option value="pmc">PagoMisCuentas</option>                                    
                                         </select>
-                                        <input type='integer' placeholder="Ingrese nº transferencia" name='transferencia' required>
-                                        <input type='integer' placeholder="Ingrese nº codigo" name='codigo' required>
-                                        
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-sm-6">                            
-                                    <button class = "btn btn-primary " type="submit">Pagar</button> 
-                                    <a href="{{ url('/admin/persona/deuda/'.$persona->id)}}" rel="tooltip"  class="btn btn-primary ">Cancelar</a>
+                                    <button class = "btn btn-primary ">
+                                        <i class = "material-icons" type="submit"> done </i> Pagar
+                                    </button> 
                                 </div>
                             </div>                                                                                         
                         </form>

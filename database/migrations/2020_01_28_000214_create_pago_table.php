@@ -16,9 +16,11 @@ class CreatePagoTable extends Migration
         Schema::create('pago', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('persona_id');
-            $table->integer('tipo_pago_id');
             $table->date('fecha');
             $table->float('monto');
+            $table->enum('tipo_pago',['efectivo','deposito','pago_mis_cuentas']);
+            $table->integer('transferencia')->nullable();
+            $table->string('codigo')->nullable();
             $table->timestamps();
         });
     }
