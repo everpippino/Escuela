@@ -23,5 +23,7 @@ Route::get('/persona', function(){
 });
 Route::get('/dni', 'PersonaController@dni');
 Route::get('/deuda/{id}', 'PersonaController@deuda');
+Route::post('/pagar', 'PersonaController@pagar');
+Route::post('/guardar', 'PersonaController@guardar');
 
 

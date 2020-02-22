@@ -58,9 +58,6 @@ class PersonaController extends Controller
       //  Busca y retorna la deuda de la persona seleccionada
       public function deuda ($id){
         $persona = Persona::where('id','=', "$id")->first();
-        $matricula = $persona->matricula()->first();
-        $cuotas = $matricula->cuota()->where('estado','!=', "pagada")->get();
-        $servicios = $matricula->servicio_detalle()->where('estado','!=', "pagada")->get();
         $adeudado = DB::select('select a.tipo, a.concepto, a.periodo, a.monto
         from
         (select 0 as tipo,\'cuota\' as concepto, c.mes as periodo, c.monto as monto
@@ -75,9 +72,84 @@ class PersonaController extends Controller
         where sd.estado != \'pagada\' and m.persona_id = :id2) as a
         order by periodo , tipo' , [ "id1" => $id, "id2" => $id]);
         
-        return view('persona/deuda')-> with(compact('adeudado'));
+        return view('persona/deuda')-> with(compact('persona','adeudado'));
+      }
+
+      //  Paga segun el monto ingresado, para el alumno indicado, la deuda mas atrasada
+      public function pagar(Request $request){
+        $id=$request->idPersona;
+        $persona = Persona::where('id','=', $id)->first();
+        $monto = $request->monto;
+        $adeudado = DB::select('select a.tipo, a.id, a.concepto, a.periodo, a.monto
+          from
+          (select 0 as tipo, c.id, \'cuota\' as concepto, c.mes as periodo, c.monto as monto
+          from persona p inner join matricula m on p.id=m.persona_id
+              inner join cuota c on m.id=c.matricula_id
+          where c.estado != \'pagada\' and m.persona_id = :id1
+          union
+          select 1 as tipo, sd.id, s.nombre as concepto, month(sd.fecha_vto) as periodo, sd.precio_actual as monto
+          from persona p inner join matricula m on p.id = m.persona_id
+              inner join servicio_detalle sd on m.id = sd.matricula_id
+              inner join servicio s on s.id = sd.servicio_id
+          where sd.estado != \'pagada\' and m.persona_id = :id2) as a
+          order by periodo , tipo' , 
+        [ "id1" => $id, "id2" => $id]);
+
+        $i=0;
+        $aPagar= [];
+        while ($monto > 0  && $i<count($adeudado)) {
+          if ($monto - $adeudado[$i]->monto >=  0) {
+            $pagar = $adeudado[$i]->monto;
+
+            $pago = new APagar();
+            $pago->tipo = $adeudado[$i]->tipo;
+            $pago->id = $adeudado[$i]->id;
+            $pago->concepto = $adeudado[$i]->concepto;
+            $pago->periodo = $adeudado[$i]->periodo;
+            $pago->monto = $adeudado[$i]->monto;
+            $pago->aPagar = $pagar;
+            $aPagar[$i] = $pago;
+            
+            $monto = $monto - $adeudado[$i]->monto;
+          } else {
+            $pago = new APagar();
+            $pago->tipo = $adeudado[$i]->tipo;
+            $pago->id = $adeudado[$i]->id;
+            $pago->concepto = $adeudado[$i]->concepto;
+            $pago->periodo = $adeudado[$i]->periodo;
+            $pago->monto = $adeudado[$i]->monto;
+            $pago->aPagar = $monto;
+            $aPagar[$i] = $pago;
+            
+            $monto = 0;
+          }
+          
+          $i++;
+        }
+        
+        return view('persona/pagar')-> with(compact('persona','aPagar','monto'));
+      }
+      
+      //  Paga segun el monto ingresado, para el alumno indicado, la deuda mas atrasada
+      public function guardar(Request $request){
+        dd($request);
+        $cantConceptos = count($request->tipoPago);
+        // registro el pago
+        for($i = 0; $i < $cantConceptos; $i++) {
+          $tipo = $request->tipoPago[$i];
+          $idPago = $request->idPago[$i];
+          $montoPago = $request->montoPago[$i];
+        }
       }
 }
 
+class APagar {
+  public $tipo;
+  public $id;
+  public $concepto;
+  public $periodo;
+  public $monto;
+  public $aPagar;
+}
 //Cuota::where('estado','!=', "pagada")->get();
 //ServicioDetalle::where('estado','!=', 'pagada')->get();
