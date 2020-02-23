@@ -18,6 +18,6 @@ class Servicio_detalle_pago extends Model
   }
   public function servicioDetalle(){
     //Relacion de muchas servicioDetallePago a un servicioDetalle 
-          return $this->belongsTo('App\ServicioDetalle');
+          return $this->belongsTo('App\Servicio_detalle');
   }
 }

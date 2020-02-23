@@ -51,19 +51,19 @@
 
 
                             <input type="hidden" id="idPersona" name="idPersona" value="{{$persona->id}}"/>
-
+                            <input type="hidden" id="monto" name="monto" value="{{$montoTotal}}"/>
                             
                             <div class="row">
                                 <div class="col-sm-6">
                                     <div class = "form-group">
                                         <span>Formas de pago:</span>
                                         <select id="medioDePago" name="medioDePago" class="form-control">
-                                            <option value="caja">Caja</option>
+                                            <option value="efectivo">Caja</option>
                                             <option value="deposito">Deposito bancario</option>
                                             <option value="pmc">PagoMisCuentas</option>                                    
                                         </select>
-                                        <input type='integer' placeholder="Ingrese nº transferencia" name='transferencia' required>
-                                        <input type='integer' placeholder="Ingrese nº codigo" name='codigo' required>
+                                        <input type='integer' placeholder="Ingrese nº transferencia" name='transferencia' id='transferencia' style="display:none" >
+                                        <input type='integer' placeholder="Ingrese nº codigo" name='codigo' id='codigo' style="display:none" >
                                         
                                     </div>
                                 </div>
@@ -87,4 +87,33 @@
     </footer>
 
 </div>
+
+<script type="text/javascript">
+var select = document.getElementById('medioDePago');
+select.addEventListener('change',
+  function(){
+    var selectedOption = this.options[select.selectedIndex];
+
+    if (selectedOption.value == "efectivo") {
+        //oculto los input
+        document.getElementById("transferencia").style.display = "none";
+        document.getElementById("codigo").style.display = "none";
+    }
+
+    if (selectedOption.value == "deposito") {
+        //oculto el input de pagoMisCuentas
+        document.getElementById("transferencia").style.display = "block";
+        document.getElementById("codigo").style.display = "none";
+    }
+    
+    if (selectedOption.value == "pmc") {
+        //oculto el input de deposito
+        document.getElementById("transferencia").style.display = "none";
+        document.getElementById("codigo").style.display = "block";
+    }
+
+  });
+
+</script>
+
 @endsection

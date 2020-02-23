@@ -5,11 +5,18 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Persona;
 use App\CuotaPago;
-use App\ServicioDetallePago;
+use App\Cuota;
+use App\Servicio_detalle_pago;
+use App\Servicio_detalle;
 use App\Pago;
+use Carbon\Carbon;
 
 class PersonaController extends Controller
 {
+      public function __construct()
+      {
+          $this->middleware('auth');
+      }
     // Retorna la vista del panel de administracion de personas
     public function index(){
         $personas = App\Persona::paginate();
@@ -91,6 +98,7 @@ class PersonaController extends Controller
         $id=$request->idPersona;
         $persona = Persona::where('id','=', $id)->first();
         $monto = $request->monto;
+        $montoTotal = $request->monto;
         $adeudado = DB::select('select a.tipo, a.id, a.concepto, a.periodo, a.monto
           from
           (select 0 as tipo, c.id, \'cuota\' as concepto, c.mes as periodo, c.monto as monto
@@ -138,21 +146,24 @@ class PersonaController extends Controller
           $i++;
         }
         
-        return view('admin/persona/pagar')-> with(compact('persona','aPagar','monto'));
+        return view('admin/persona/pagar')-> with(compact('persona','aPagar','montoTotal'));
       }
       
       //  Paga segun el monto ingresado, para el alumno indicado, la deuda mas atrasada
       public function guardar(Request $request){
-        dd($request->all());
+        //dd($request->all());
 
         $cantConceptos = count($request->tipoPago);
         // registro el pago
         $pago = new Pago();
         $pago->persona_id = $request->idPersona;
-        $pago->tipo_pago_id = $montoPago;//se supone que es la forma de pago?
-        $pago->fecha = $montoPago;//necesito la fecha de hoy
-        $pago->monto = $montoPago;//necesito el total de montoPago 
-        $pago->save();//o store?
+        $pago->tipo_pago = $request->medioDePago;
+        $pago->fecha = Carbon::now();
+        $pago->monto = $request->monto;
+        $pago->transferencia = $request->transferencia;
+        $pago->codigo = $request->codigo;
+         
+        $pago->save();//insert
 
         for($i = 0; $i < $cantConceptos; $i++) {
           $tipo = $request->tipoPago[$i];
@@ -161,18 +172,36 @@ class PersonaController extends Controller
 
            // registro el pago de cuotas
          
-          if ($tipo=0){
+          if ($tipo==0){
             $cuotaPago = new CuotaPago();
+            
+            $cuota = Cuota::where('id','=', $idPago)->first();
+            $cuota->monto_pagado = $cuota->monto_pagado + $montoPago;
+            if( $cuota->monto_pagado == $cuota->monto )
+              $cuota->estado= 'pagada';
+            $cuota->save();
+
+            $cuotaPago->cuota()->associate($cuota);
+            $cuotaPago->pago()->associate($pago);
             $cuotaPago->monto_pagado = $montoPago;
             $cuotaPago->save();//o store?
              // registro el pago de servicios
           } else {
-            $servicioDetallePago = new ServicioDetallePago();
+            $servicioDetallePago = new Servicio_detalle_pago();
+
+            $detalle = Servicio_detalle::where('id','=', $idPago)->first();
+            //$detalle->monto_pagado = $cuota->monto_pagado + $montoPago;
+            //if( $detalle->monto_pagado == $detalle->monto )
+              $detalle->estado= 'pagada';
+            $detalle->save();
+
+            $servicioDetallePago->servicioDetalle()->associate($detalle);
+            $servicioDetallePago->pago()->associate($pago);
             $servicioDetallePago->monto_pagado = $montoPago;
             $servicioDetallePago->save();//o store?
           }
-          $cuotaPago->save();
-          return redirect('admin/persona/deuda'.$request->idPersona);
+          
+          return redirect('admin/persona/home');
         }
       }
 }

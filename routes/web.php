@@ -17,13 +17,17 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/admin/persona/home', 'HomeController@index')->name('home');
-Route::get('persona', function(){
-    return view('admin/persona/index');
+
+Route::middleware(['auth','admin'])->prefix('admin')->group(function () {
+    Route::get('/persona/home', 'HomeController@index')->name('home');
+    Route::get('persona', function(){
+        return view('/persona/index');
+    });
+    Route::get('/persona/dni', 'PersonaController@dni');
+    Route::get('/persona/deuda/{id}', 'PersonaController@deuda');
+    Route::post('/persona/pagar', 'PersonaController@pagar');
+    Route::post('/persona/guardar', 'PersonaController@guardar');
 });
-Route::get('/admin/persona/dni', 'PersonaController@dni');
-Route::get('/admin/persona/deuda/{id}', 'PersonaController@deuda');
-Route::post('/admin/persona/pagar', 'PersonaController@pagar');
-Route::post('/admin/persona/guardar', 'PersonaController@guardar');
+
 
 

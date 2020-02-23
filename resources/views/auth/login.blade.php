@@ -43,10 +43,7 @@
                         </div>
                         <div class="footer text-center">
                             <button type="submit" class="btn btn-simple btn-primary btn-lg">Ingresar</a>
-                        </div>
-                         {{-- <a class="btn btn-link" href="{{ route('password.request') }}">
-                            {{ __('Forgot Your Password?') }} -->
-                        </a>  --}}
+                        </div>                       
                     </form>
                 </div>
             </div>
