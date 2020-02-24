@@ -70,12 +70,12 @@ class PersonaController extends Controller
         $persona = Persona::where('id','=', "$id")->first();
         $adeudado = DB::select('select a.tipo, a.concepto, a.periodo, a.monto
         from
-        (select 0 as tipo,\'cuota\' as concepto, c.mes as periodo, c.monto as monto
+        (select 0 as tipo,\'cuota\' as concepto, c.mes as periodo, (c.monto-c.monto_pagado) as monto
         from persona p inner join matricula m on p.id=m.persona_id
              inner join cuota c on m.id=c.matricula_id
         where c.estado != \'pagada\' and m.persona_id = :id1
         union
-        select 1 as tipo, s.nombre as concepto, month(sd.fecha_vto) as periodo, sd.precio_actual as monto
+        select 1 as tipo, s.nombre as concepto, month(sd.fecha_vto) as periodo, (sd.precio_actual-sd.precio_pagado) as monto
         from persona p inner join matricula m on p.id = m.persona_id
              inner join servicio_detalle sd on m.id = sd.matricula_id
              inner join servicio s on s.id = sd.servicio_id
@@ -101,12 +101,12 @@ class PersonaController extends Controller
         $montoTotal = $request->monto;
         $adeudado = DB::select('select a.tipo, a.id, a.concepto, a.periodo, a.monto
           from
-          (select 0 as tipo, c.id, \'cuota\' as concepto, c.mes as periodo, c.monto as monto
+          (select 0 as tipo, c.id, \'cuota\' as concepto, c.mes as periodo, (c.monto-c.monto_pagado) as monto
           from persona p inner join matricula m on p.id=m.persona_id
               inner join cuota c on m.id=c.matricula_id
           where c.estado != \'pagada\' and m.persona_id = :id1
           union
-          select 1 as tipo, sd.id, s.nombre as concepto, month(sd.fecha_vto) as periodo, sd.precio_actual as monto
+          select 1 as tipo, sd.id, s.nombre as concepto, month(sd.fecha_vto) as periodo, (sd.precio_actual-sd.precio_pagado) as monto
           from persona p inner join matricula m on p.id = m.persona_id
               inner join servicio_detalle sd on m.id = sd.matricula_id
               inner join servicio s on s.id = sd.servicio_id
@@ -189,20 +189,22 @@ class PersonaController extends Controller
           } else {
             $servicioDetallePago = new Servicio_detalle_pago();
 
-            $detalle = Servicio_detalle::where('id','=', $idPago)->first();
-            //$detalle->monto_pagado = $cuota->monto_pagado + $montoPago;
-            //if( $detalle->monto_pagado == $detalle->monto )
-              $detalle->estado= 'pagada';
+            $detalle = Servicio_detalle::where('id','=', $idPago)->first();            
+            $detalle->precio_pagado = $detalle->precio_pagado + $montoPago;
+            if( $detalle->precio_pagado == $detalle->precio_actual )
+              $detalle->estado= 'pagada';            
             $detalle->save();
 
             $servicioDetallePago->servicioDetalle()->associate($detalle);
             $servicioDetallePago->pago()->associate($pago);
             $servicioDetallePago->monto_pagado = $montoPago;
             $servicioDetallePago->save();//o store?
-          }
-          
-          return redirect('admin/persona/home');
+          }      
         }
+
+
+
+        return redirect('admin/persona/home')->with('success', 'Guardo con exito');
       }
 }
 

@@ -6,7 +6,6 @@
 <div class="header header-filter" style="background-image: url('{{ asset('img/escuela3.jpg')}}'); background-size: cover; background-position: top center;">
     <div class="container">
         <div class="row">
-            <!-- <div class="section-text-center"> -->
             <div class="col-md-10 col-md-offset-1 col-sm-12">
                 <div class="card card-signup">
                     <div class="header header-primary text-center">
